@@ -1,5 +1,6 @@
 const express = require('express');
 require('./database.js');
+const Product = require('./models.js');
 
 const app = express();
 
@@ -9,9 +10,14 @@ app.get('/', (req, resp) => {
     return resp.send("Online!");
 });
 
-app.post('/api/products', (req, resp) => {
-    console.log(req.body.title);
-    return resp.send("API fuctional");
+app.post('/api/products', async (req, resp) => {
+    const product = new Product({
+        id: 1,
+        description: req.body.description
+    });
+    await product.save();
+    //console.log(req.body.title);
+    return resp.status(201).send("API fuctional");
 });
 
 app.patch('/api/products/:id', (req, resp) => {
