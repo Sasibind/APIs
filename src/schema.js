@@ -3,20 +3,25 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const productsSchema = Schema({
-    "id":{
+    title:{
+        type: String,
+        minlength: 2,
+        required: true
+    },
+    id:{
         type: Number,
         required: true,
     },
-    "description":{
+    description:{
         type: String,
         minlength: 2,
         required: true,
     },
-    "date":{
+    date:{
         type: Date,
-        default: Date.Now,
+        default: Date.now,
     },
-    "starred":{
+    starred:{
         type: Boolean,
         default: false,
     },

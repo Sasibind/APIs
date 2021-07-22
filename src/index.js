@@ -10,27 +10,66 @@ app.get('/', (req, resp) => {
     return resp.send("Online!");
 });
 
+app.get('/api/products', async (req, resp) => {
+    try{
+        const products = await Product.find();
+        return resp.status(200).send(products);
+    }catch(e){
+        return resp.status(500).send(e);
+    };
+})
+
 app.post('/api/products', async (req, resp) => {
-    const product = new Product({
-        id: 1,
-        description: req.body.description
-    });
-    await product.save();
-    //console.log(req.body.title);
-    return resp.status(201).send("API fuctional");
+    try{
+        const product = new Product({
+            id: 1,
+            title: req.body.title,
+            description: req.body.description
+        });
+        await product.save();
+        //console.log(req.body.title);
+        return resp.status(201).send(product);
+    }catch(e){
+        return resp.status(500).send("Server Error\n" + e);
+    };
 });
 
-app.patch('/api/products/:id', (req, resp) => {
-    console.log(req.params.id);
-    return resp.status(200).send("");
+app.get('/api/products/:id', async (req, resp) => {
+    const _id = req.params.id;
+    try{
+        const products = await Product.findById(_id);
+        return resp.status(200).send(products);
+    }catch(e){
+        return resp.status(500).send(e);
+    };
 });
 
-app.get('/api/products', (req, resp) => {
-    return resp.status(200).send({ "title":"work", "date":"20-07-2021" });
+app.patch('/api/products/:id', async (req, resp) => {
+    const _id = req.params.id;
+    try{
+        const products = await Product.findByIdAndUpdate(_id, req.body);
+        if(products)
+        {
+            const productsUpdated = await Product.findById(_id);
+            return resp.status(200).send(productsUpdated);
+        }
+        return resp.status(400).send("Updation failed. Please check your ID again.")
+    }catch(e){
+        return resp.status(500).send(e);
+    }
 });
 
-app.delete('/api/products/:id', (req, resp) => {
-    return resp.send("");
+app.delete('/api/products/:id', async (req, resp) => {
+    const _id = req.params.id;
+    try{
+        const products = await Product.findByIdAndDelete(_id);
+        if(products){
+            return resp.status(400).send("Product successfully deleted");
+        }
+        return resp.send("Deletion failed. Please check your ID again.");
+    }catch(e){
+        return resp.status(500).send(e);
+    };
 });
 
 app.listen(3000, () => {
