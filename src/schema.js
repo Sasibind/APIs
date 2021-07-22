@@ -1,30 +1,24 @@
 const mongoose = require('mongoose');
+const emailValidator = require('email-validator');
 
 const { Schema } = mongoose;
 
 const productsSchema = Schema({
-    title:{
+    name:{
         type: String,
         minlength: 2,
         required: true
     },
-    id:{
-        type: Number,
-        required: true,
-    },
-    description:{
+    email:{
         type: String,
         minlength: 2,
-        required: true,
-    },
-    date:{
-        type: Date,
-        default: Date.now,
-    },
-    starred:{
-        type: Boolean,
-        default: false,
-    },
+        validate: {
+            validator: emailValidator.validate,
+            message: "Invalid email",
+            isAsync: false
+        },
+        required: true
+    }
 });
 
 module.exports = productsSchema;

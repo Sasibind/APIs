@@ -22,12 +22,10 @@ app.get('/api/products', async (req, resp) => {
 app.post('/api/products', async (req, resp) => {
     try{
         const product = new Product({
-            id: 1,
-            title: req.body.title,
-            description: req.body.description
+            name: req.body.name,
+            email: req.body.email
         });
         await product.save();
-        //console.log(req.body.title);
         return resp.status(201).send(product);
     }catch(e){
         return resp.status(500).send("Server Error\n" + e);
